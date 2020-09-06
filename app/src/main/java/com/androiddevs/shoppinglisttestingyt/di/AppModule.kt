@@ -2,6 +2,7 @@ package com.androiddevs.shoppinglisttestingyt.di
 
 import android.content.Context
 import androidx.room.Room
+import com.androiddevs.shoppinglisttestingyt.R
 import com.androiddevs.shoppinglisttestingyt.data.local.ShoppingDao
 import com.androiddevs.shoppinglisttestingyt.data.local.ShoppingItemDatabase
 import com.androiddevs.shoppinglisttestingyt.data.local.remote.PixabayAPI
@@ -9,6 +10,8 @@ import com.androiddevs.shoppinglisttestingyt.repositories.DefaultShoppingReposit
 import com.androiddevs.shoppinglisttestingyt.repositories.ShoppingRepository
 import com.androiddevs.shoppinglisttestingyt.utils.Consts.BASE_URL
 import com.androiddevs.shoppinglisttestingyt.utils.Consts.DATABASE_NAME
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +32,16 @@ object AppModule {
 
         ) = Room.databaseBuilder(context, ShoppingItemDatabase::class.java, DATABASE_NAME)
             .build()
+
+    @Singleton
+    @Provides
+    fun provideGlideInstance(
+        @ApplicationContext context: Context
+    ) = Glide.with(context).setDefaultRequestOptions(
+        RequestOptions()
+            .placeholder(R.drawable.ic_image)
+            .error(R.drawable.ic_image)
+    )
 
     @Singleton
     @Provides

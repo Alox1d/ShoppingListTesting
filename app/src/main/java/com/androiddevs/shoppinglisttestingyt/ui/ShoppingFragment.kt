@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.androiddevs.shoppinglisttestingyt.R
-import com.androiddevs.shoppinglisttestingyt.ui.AddShoppingItemFragmentDirections.Companion.actionAddShoppingItemFragmentToImagePickFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ShoppingFragment : Fragment(R.layout.fragment_shopping) {
