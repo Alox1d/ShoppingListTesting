@@ -5,13 +5,16 @@
       <entry key="AddShoppingItemFragmentTest">
         <State />
       </entry>
-      <entry key="ShoppingDaoTest">
+      <entry key="ImagePickFragmentTest">
         <State />
       </entry>
       <entry key="ShoppingFragmentTest">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="clickImage_popBackStackAndSetImageUrl()">
         <State />
       </entry>
       <entry key="testLaunchFragmentInHiltContainer()">
