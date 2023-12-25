@@ -1,19 +1,21 @@
 package com.androiddevs.shoppinglisttestingyt.data.local
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.androiddevs.shoppinglisttestingyt.getOrAwaitValue
+import com.androiddevs.shoppinglisttestingyt.launchFragmentInHiltContainer
+import com.androiddevs.shoppinglisttestingyt.ui.ShoppingFragment
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
-@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class ShoppingDaoTest {
 
     // rule swaps the background executor
@@ -25,23 +27,30 @@ class ShoppingDaoTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private lateinit var database: ShoppingItemDatabase
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    @Named("test_db")
+    lateinit var database: ShoppingItemDatabase
     private lateinit var dao: ShoppingDao
 
     @Before
     fun setup() {
-        database = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            ShoppingItemDatabase::class.java
-        )
-            .allowMainThreadQueries() // to execute all inside only one thread
-            .build()
+        hiltRule.inject()
         dao = database.shoppingDao()
     }
 
     @After
     fun tearDown() {
         database.close()
+    }
+
+    @Test
+    fun testLaunchFragmentInHiltContainer(){
+        launchFragmentInHiltContainer<ShoppingFragment>(){
+
+        }
     }
 
     @Test
