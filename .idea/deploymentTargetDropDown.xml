@@ -2,19 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AddShoppingItemFragmentTest">
+        <State />
+      </entry>
       <entry key="ShoppingDaoTest">
         <State />
       </entry>
-      <entry key="Tests in 'com.androiddevs.shoppinglisttestingyt.data.local'">
+      <entry key="ShoppingFragmentTest">
         <State />
       </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="deleteShoppingItem()">
-        <State />
-      </entry>
-      <entry key="insertShoppingItem()">
+      <entry key="testLaunchFragmentInHiltContainer()">
         <State />
       </entry>
     </value>
