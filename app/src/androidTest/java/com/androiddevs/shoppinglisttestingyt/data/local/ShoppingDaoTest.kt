@@ -4,24 +4,26 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.SmallTest
 import com.androiddevs.shoppinglisttestingyt.getOrAwaitValue
-import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-@SmallTest
 class ShoppingDaoTest {
 
+    // rule swaps the background executor
+    // used by the Architecture Components
+    // with a different one which executes each task synchronously.
     @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var database: ShoppingItemDatabase
     private lateinit var dao: ShoppingDao
@@ -31,60 +33,81 @@ class ShoppingDaoTest {
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             ShoppingItemDatabase::class.java
-        ).allowMainThreadQueries().build()
+        )
+            .allowMainThreadQueries() // to execute all inside only one thread
+            .build()
         dao = database.shoppingDao()
     }
 
     @After
-    fun teardown() {
+    fun tearDown() {
         database.close()
     }
 
     @Test
-    fun insertShoppingItem() = runBlockingTest {
-        val shoppingItem = ShoppingItem("name", 1, 1f, "url", id = 1)
-        dao.insertShoppingItem(shoppingItem)
-
+    fun insertShoppingItem() = runTest(mainDispatcherRule.testDispatcher) {
+        val item = ShoppingItem(
+            name = "Banan",
+            1,
+            1f,
+            "i",
+            1
+        )
+        dao.insertShoppingItem(item)
         val allShoppingItems = dao.observeAllShoppingItems().getOrAwaitValue()
 
-        assertThat(allShoppingItems).contains(shoppingItem)
+        Assert.assertEquals(item, allShoppingItems[0])
     }
 
     @Test
-    fun deleteShoppingItem() = runBlockingTest {
-        val shoppingItem = ShoppingItem("name", 1, 1f, "url", id = 1)
-        dao.insertShoppingItem(shoppingItem)
-        dao.deleteShoppingItem(shoppingItem)
-
+    fun deleteShoppingItem() = runTest(mainDispatcherRule.testDispatcher) {
+        val item = ShoppingItem(
+            name = "Banan",
+            1,
+            1f,
+            "i",
+            1
+        )
+        dao.insertShoppingItem(item)
+        dao.deleteShoppingItem(item)
         val allShoppingItems = dao.observeAllShoppingItems().getOrAwaitValue()
 
-        assertThat(allShoppingItems).doesNotContain(shoppingItem)
+        Assert.assertEquals(true, allShoppingItems.isEmpty())
     }
 
     @Test
-    fun observeTotalPriceSum() = runBlockingTest {
-        val shoppingItem1 = ShoppingItem("name", 2, 10f, "url", id = 1)
-        val shoppingItem2 = ShoppingItem("name", 4, 5.5f, "url", id = 2)
-        val shoppingItem3 = ShoppingItem("name", 0, 100f, "url", id = 3)
-        dao.insertShoppingItem(shoppingItem1)
-        dao.insertShoppingItem(shoppingItem2)
-        dao.insertShoppingItem(shoppingItem3)
+    fun observeTotalPriceSum() = runTest(mainDispatcherRule.testDispatcher) {
+        val item1 = ShoppingItem(
+            name = "Banan",
+            1,
+            1f,
+            "i",
+            1
+        )
+        val item2 = ShoppingItem(
+            name = "Banan",
+            2,
+            2f,
+            "i",
+            2
+        )
+        val item3 = ShoppingItem(
+            name = "Banan",
+            3,
+            3f,
+            "i",
+            3
+        )
+        dao.insertShoppingItem(item1)
+        dao.insertShoppingItem(item2)
+        dao.insertShoppingItem(item3)
+        val allShoppingItems = dao.observeTotalPrice().getOrAwaitValue()
 
-        val totalPriceSum = dao.observeTotalPrice().getOrAwaitValue()
-
-        assertThat(totalPriceSum).isEqualTo(2 * 10f + 4 * 5.5f)
+        Assert.assertEquals(
+            item1.price * item1.amount
+                    + item2.price * item2.amount
+                    + item3.price * item3.amount,
+            allShoppingItems
+        )
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
