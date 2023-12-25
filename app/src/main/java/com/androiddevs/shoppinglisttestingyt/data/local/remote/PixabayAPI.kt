@@ -2,7 +2,7 @@ package com.androiddevs.shoppinglisttestingyt.data.local.remote
 
 import com.androiddevs.shoppinglisttestingyt.BuildConfig
 import com.androiddevs.shoppinglisttestingyt.data.remote.responses.ImageResponse
-import okhttp3.Response
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
