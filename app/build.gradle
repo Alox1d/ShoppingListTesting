@@ -4,6 +4,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'dagger.hilt.android.plugin'
 
+def pixabayApiKey = providers.gradleProperty('PIXABAY_API_KEY')
+        .orElse(providers.environmentVariable('PIXABAY_API_KEY'))
+        .getOrElse('')
+
 android {
     compileSdkVersion 33
 
@@ -13,7 +17,7 @@ android {
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
-        buildConfigField("String", "API_KEY", API_KEY)
+        buildConfigField("String", "API_KEY", groovy.json.JsonOutput.toJson(pixabayApiKey))
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "com.androiddevs.shoppinglisttestingyt.HiltTestRunner"
