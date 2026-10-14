@@ -1,0 +1,5 @@
+# SETUP REQUIRED: merge this setting into your user Gradle properties file.
+# macOS/Linux: ~/.gradle/gradle.properties
+# Windows: %USERPROFILE%\.gradle\gradle.properties
+# Replace the placeholder with your Pixabay API key, then rebuild the app.
+PIXABAY_API_KEY=YOUR_PIXABAY_API_KEY
